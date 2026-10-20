@@ -22,6 +22,10 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+      - name: Clean pasted code and check syntax
+        run: |
+          perl -CSD -pi -e 's/\x{00A0}/ /g; s/\x{200B}//g; s/\t/    /g; s/\r$//' *.py
+          python -m py_compile *.py
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-liberation fonts-dejavu-core
       - run: pip install -r requirements.txt && python setup_assets.py
       - name: Make and upload
