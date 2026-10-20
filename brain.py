@@ -90,6 +90,12 @@ class Brain:
         if terms:
             self.books[k]["concepts"] = terms
 
+    def set_ideas(self, k, ideas):
+        """ideas = [{'term':..., 'text':...}] - saved so later Shorts can reuse the deep research."""
+        if ideas:
+            self.books[k]["ideas"] = ideas
+            self.books[k]["concepts"] = [i["term"] for i in ideas]
+
     def short_count(self, k):
         return len(self.books[k]["shorts"])
 
