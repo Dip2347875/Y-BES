@@ -30,7 +30,7 @@ RATE, PITCH = env("TTS_RATE", "-4%"), env("TTS_PITCH", "-2Hz")
 
 # ---- video formats -------------------------------------------------------
 LONG = dict(W=1920, H=1080, fps=24, chunk_words=34, max_words=48)
-MIN_WORDS_LONG = int(env("MIN_WORDS_LONG", "2200"))   # skip books that do not have enough free material
+MIN_WORDS_LONG = int(env("MIN_WORDS_LONG", "1200"))     # skip books that do not have enough free material
 SHORT = dict(W=1080, H=1920, fps=30, target_seconds=55, chunk_words=12, max_words=18)
 RENDER_WORKERS = int(env("RENDER_WORKERS", "2"))
 FFMPEG_THREADS = env("FFMPEG_THREADS", "2")
