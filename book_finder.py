@@ -424,12 +424,9 @@ CAT_RULES = [
 
 def map_category(hay):
     hay = hay.lower()
-    best, score = "Self-Improvement", 0
-    for cat, kws in CAT_RULES:
-        s = sum(hay.count(k) for k in kws.split())
-        if s > score:
-            best, score = cat, s
-    return best
+    scores = {cat: sum(hay.count(k) for k in kws.split()) for cat, kws in CAT_RULES}
+    best = max(scores, key=scores.get)
+    return best if scores[best] > 0 else "Self-Improvement"
 
 
 # ------------------------------------------------------------------ main research
@@ -471,4 +468,3 @@ def research(book, workdir):
     print(f"[research] {title} / {author}: wiki={'yes' if bp else 'no'} web_pages={len(texts)} "
           f"concepts={[c['term'] for c in concepts]} category={d['category']}")
     return d
-     
