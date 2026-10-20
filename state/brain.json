@@ -1,6 +1,32 @@
 {
   "version": 2,
   "books": {
+    "range-epstein": {
+      "title": "Range",
+      "author": "David Epstein",
+      "norm": "range",
+      "surname": "epstein",
+      "status": "done",
+      "attempts": 0,
+      "concepts": [
+        "Wicked problem",
+        "Problem solving",
+        "Flynn effect",
+        "K. Anders Ericsson",
+        "Sports science",
+        "McKinsey & Company"
+      ],
+      "shorts": [
+        {
+          "idea": "Wicked problem",
+          "video_id": "UNQ_mJMa7TE",
+          "at": 1792519463.4663336
+        }
+      ],
+      "long": {},
+      "first_seen": 1792519350.613824,
+      "claimed_at": 1792519350.6138258
+    },
     "can-t-hurt-me-goggins": {
       "title": "Can't Hurt Me",
       "author": "David Goggins",
@@ -27,6 +53,7 @@
   },
   "rss_seen": [],
   "playlists": {
-    "Biography & Memoir — Book Summaries": "PLF8gt43toipg"
+    "Biography & Memoir — Book Summaries": "PLF8gt43toipg",
+    "Productivity & Habits — Book Shorts": "PLRK2V9H9k8gQ"
   }
 }
