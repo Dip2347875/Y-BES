@@ -7,6 +7,42 @@ def log(*a):
     print(*a, flush=True)
 
 
+def make_long_script(d):
+    """Local-AI script from deep research; returns None when there is not enough material for a 1h45+ video."""
+    try:
+        import local_ai, analyst, sources
+        local_ai.start_budget(config.AI_BUDGET_MIN)
+        srcs = sources.gather(d, log)
+        total = sum(s["words"] for s in srcs)
+        log(f"[sources] {len(srcs)} sources, {total} words in total")
+        if total < config.MIN_SOURCE_WORDS:
+            log("[skip] not enough research material for this book")
+            return None
+        secs = analyst.write_long(d, srcs, log)
+        if secs:
+            return secs
+        log("[ai] no script produced")
+        return None
+    except Exception:
+        traceback.print_exc()
+        log("[ai] local AI unavailable - using the simple template script instead")
+        return script_writer.compose_long(d)
+
+
+def make_short_script(d, idx):
+    if idx < len(d["concepts"]):
+        c = d["concepts"][idx]
+        try:
+            import analyst
+            text = analyst.write_short(d, c["term"], c["text"])
+            if text:
+                return c["term"], text
+        except Exception:
+            traceback.print_exc()
+            log("[ai] local AI unavailable for the Short - using the template")
+    return script_writer.compose_short(d, idx)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["long", "short"], required=True)
@@ -28,23 +64,30 @@ def main():
         try:
             wd = config.WORK / key
             wd.mkdir(parents=True, exist_ok=True)
-            d = book_finder.research(book, wd)
-            br.set_concepts(key, [c["term"] for c in d["concepts"]])
-            if a.mode == "long":
-                sections, idea = script_writer.compose_long(d), None
-                if not sections:
-                    br.mark_skipped(key, "not enough free material for a long video")
-                    br.save()
-                    log("[skip] not enough material, trying another book")
-                    continue
+            stored = br.books[key].get("ideas") or []
+            if a.mode == "short" and stored:
+                d = book_finder.research_light(book, wd)      # deep research already saved in the brain
+                d["concepts"] = stored
             else:
-                r = script_writer.compose_short(d, br.short_count(key))
+                d = book_finder.research(book, wd)
+            if a.mode == "long":
+                sections, idea = make_long_script(d), None
+                if not sections:
+                    br.mark_skipped(key, "not enough material for a long video")
+                    br.save()
+                    continue
+                br.set_ideas(key, d["concepts"]) if d["concepts"] else None
+            else:
+                r = make_short_script(d, br.short_count(key))
                 if not r:
                     br.mark_skipped(key, "no short idea available")
                     br.save()
                     continue
                 idea = r[0]
                 sections = [dict(title=idea, text=r[1])]
+                if not stored and d["concepts"]:
+                    br.set_ideas(key, d["concepts"])
+            br.set_concepts(key, [c["term"] for c in d["concepts"]])
             chosen = (key, d, sections, idea)
             break
         except Exception as e:
