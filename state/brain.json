@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "books": {
+    "can-t-hurt-me-goggins": {
+      "title": "Can't Hurt Me",
+      "author": "David Goggins",
+      "norm": "can t hurt me",
+      "surname": "goggins",
+      "status": "done",
+      "attempts": 0,
+      "concepts": [
+        "Mental toughness",
+        "Sickle cell trait",
+        "Michele Graglia",
+        "Social anxiety disorder"
+      ],
+      "shorts": [],
+      "long": {
+        "done": true,
+        "video_id": "KGb-q9--BGo",
+        "at": 1792519308.602037
+      },
+      "first_seen": 1792518878.278449,
+      "claimed_at": 1792518878.2784507,
+      "category": "Biography & Memoir"
+    }
+  },
+  "rss_seen": [],
+  "playlists": {
+    "Biography & Memoir — Book Summaries": "PLF8gt43toipg"
+  }
+}
