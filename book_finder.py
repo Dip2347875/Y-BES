@@ -7,7 +7,7 @@ import feedparser, requests
 from PIL import Image, ImageDraw
 import config, brain
 
-UA = {"User-Agent": "Mozilla/5.0 (compatible; BookExplainerBot/2.0)"}
+UA = {"User-Agent": "Mozilla/5.0 (compatible; BookExplainerBot/2.1)"}
 WIKI = "https://en.wikipedia.org/w/api.php"
 
 FALLBACK = [
@@ -40,6 +40,11 @@ FALLBACK = [
     ("Walden", "Henry David Thoreau"), ("Crime and Punishment", "Fyodor Dostoevsky"),
 ]
 
+# third-party summaries / workbooks / special editions are NOT the original book
+EDITION_BAD = re.compile(r"\b(summary|summaries|workbook|study guide|sparknotes|cliffsnotes|companion|graphic novel|"
+                         r"illustrated|abridged|audio|box set|boxed|collection|journal|notebook|analysis|trivia|"
+                         r"conversation starters|team assessment|participant)\b", re.I)
+
 
 def _clean(t):
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html.unescape(t or ""))).strip()
@@ -57,8 +62,17 @@ def _ratio(a, b):
     return difflib.SequenceMatcher(None, a, b).ratio()
 
 
+def short_title(t):
+    """'Quiet: The Power of Introverts' -> 'Quiet' ; 'X - Team Assessment' -> 'X'"""
+    return re.split(r"\s[-\u2013\u2014]\s|:", t or "")[0].strip() or (t or "")
+
+
+def _edition_ok(v):
+    return not EDITION_BAD.search(f"{v.get('title', '')} {v.get('subtitle', '')}")
+
+
 # ------------------------------------------------------------------ is it really a book?
-def _google_volumes(title, author, n=6):
+def _google_volumes(title, author, n=8):
     q = f'intitle:"{title}"' + (f" inauthor:{brain.surname(author)}" if author else "")
     r = _get("https://www.googleapis.com/books/v1/volumes",
              params={"q": q, "maxResults": n, "printType": "books", "langRestrict": "en"})
@@ -79,19 +93,22 @@ def verify_book(title, author=""):
     for v in _google_volumes(title, author):
         authors = v.get("authors") or []
         vt = v.get("title", "")
-        s = max(_ratio(nt, brain.norm_title(vt)), _ratio(nt, brain.norm_title(f"{vt} {v.get('subtitle', '')}")))
-        if not authors or (sn and sn not in " ".join(authors).lower()):
+        if not _edition_ok(v) or not authors or (sn and sn not in " ".join(authors).lower()):
             continue
-        if s >= 0.88 and len(v.get("description", "")) >= 150 and (v.get("pageCount") or 120) >= 80 and s > score:
-            best, score = dict(title=vt, author=authors[0]), s
+        s = _ratio(nt, brain.norm_title(vt))
+        if s >= 0.88 and len(v.get("description", "")) >= 150 and (v.get("pageCount") or 120) >= 80:
+            s -= len(vt) / 10000  # tie-break: prefer the shortest (original) edition title
+            if s > score:
+                best, score = dict(title=short_title(vt), author=authors[0]), s
     if best:
         return best
     time.sleep(0.4)
     for d in _openlibrary_docs(title, author):
         authors = d.get("author_name") or []
         s = _ratio(nt, brain.norm_title(d.get("title", "")))
-        if authors and (not sn or sn in " ".join(authors).lower()) and s >= 0.9 and (d.get("number_of_pages_median") or 120) >= 80:
-            return dict(title=d["title"], author=authors[0])
+        if authors and not EDITION_BAD.search(d.get("title", "")) and (not sn or sn in " ".join(authors).lower()) \
+                and s >= 0.9 and (d.get("number_of_pages_median") or 120) >= 80:
+            return dict(title=short_title(d["title"]), author=authors[0])
     return None
 
 
@@ -229,6 +246,12 @@ GSTOP = set("the a an and or but if of to in on at for with as is are was were b
             "they their we our he she his her not no so than then there here from by about into over just very more most "
             "can could will would should have has had do does did what which who how why when also one two new like make "
             "get people time way many much even still such some any other only first book author reading read".split())
+GENERIC = set("lesson career potential attention learning understanding knowledge science human culture business research "
+              "school individual information meeting health strategy create become turning reason process principle purpose "
+              "wisdom philosophy discipline determination teamwork matter thought planning intelligence failure suggestion "
+              "wealth finance behavior behaviour performance leadership debate harmony argument conversation poverty virtue "
+              "destiny feeling rights cognition progress effectiveness consumption patience rationality psychology "
+              "creativity collaboration personality success life love time money power work mind world".split())
 
 
 def _ngrams(text, exclude):
@@ -246,16 +269,19 @@ def _ngrams(text, exclude):
 
 
 def mine_concepts(book_page, texts, exclude, limit=12):
-    """Concept = a Wikipedia article that (a) is linked from the book's article or (b) is named in >=2 independent
-    web pages about the book, AND whose first lines define a concept/technique (not a person, place or company)."""
-    cands = {}
+    """Concept = a Wikipedia article that (a) is linked from the book's article or (b) is a 2-3 word phrase named in
+    >=2 independent web pages about the book, AND whose first lines define a concept/technique (not a person, place,
+    company or a generic everyday word)."""
+    cands, linked = {}, set()
     for l in (_wiki_links(book_page) if book_page else []):
-        if not re.search(r"\d{3,4}|\bList of\b|\(disambiguation\)", l):
+        if not re.search(r"\d{3,4}|\bList of\b|disambiguation", l):
             cands[l] = cands.get(l, 0) + 3
+            linked.add(l)
     df = Counter()
     for t in texts:
         for g in _ngrams(t[:12000], exclude):
-            df[g] += 1
+            if " " in g:                      # single words from free text are almost always generic
+                df[g] += 1
     for g, c in df.most_common(150):
         if c >= 2:
             cands[g.capitalize()] = cands.get(g.capitalize(), 0) + c
@@ -265,11 +291,15 @@ def mine_concepts(book_page, texts, exclude, limit=12):
     out = []
     for term, intro in intros.items():
         head = intro[:350]
-        if len(intro) < 120 or BAD.search(head[:160]) or not CUE.search(head):
+        clean = re.sub(r"\s*\(.*?\)", "", term).strip()
+        low = clean.lower()
+        if len(intro) < 120 or BAD.search(head[:160]) or not CUE.search(head) or "disambiguation" in term.lower():
             continue
-        if any(x in term.lower() for x in exclude) or term.lower().startswith("list of"):
+        if any(x in low for x in exclude) or low.startswith("list of"):
             continue
-        out.append((alltext.count(term.lower()) + cands.get(term, 0) * 2, term, intro))
+        if " " not in low and (low in GENERIC or term not in linked):
+            continue
+        out.append((alltext.count(low) + cands.get(term, 0) * 2, clean, intro))
     out.sort(reverse=True)
     res, used = [], []
     for _, term, intro in out:
@@ -291,16 +321,20 @@ def _search_urls(queries):
             from ddgs import DDGS
         except ImportError:
             from duckduckgo_search import DDGS
-        for q in queries:
-            for h in DDGS().text(q, max_results=6):
-                u = h.get("href") or h.get("url")
-                if u:
-                    urls.append(u)
-            time.sleep(1.0)
-    except Exception as e:
-        print("[web] ddgs failed, using html fallback:", e)
-    if len(urls) < 4:
-        for q in queries:
+    except Exception:
+        DDGS = None
+    for q in queries:
+        got = 0
+        if DDGS:
+            try:
+                for h in DDGS().text(q, max_results=6):
+                    u = h.get("href") or h.get("url")
+                    if u:
+                        urls.append(u)
+                        got += 1
+            except Exception as e:
+                print("[web] ddgs failed for one query:", str(e)[:60])
+        if got == 0:
             r = _get("https://html.duckduckgo.com/html/", params={"q": q})
             if r:
                 for m in re.finditer(r'class="result__a" href="([^"]+)"', r.text):
@@ -308,7 +342,7 @@ def _search_urls(queries):
                     if "uddg=" in u:
                         u = unquote(u.split("uddg=")[1].split("&")[0])
                     urls.append(u)
-            time.sleep(1.0)
+        time.sleep(1.0)
     out = []
     for u in urls:
         if u.startswith("http") and u not in out and not any(x in u for x in ("youtube.com", "amazon.", "pinterest", "facebook", "wikipedia.org", "reddit.com")):
@@ -398,15 +432,14 @@ def map_category(hay):
     return best
 
 
-
 # ------------------------------------------------------------------ main research
 def research(book, workdir):
-    title, author = book["title"], book.get("author", "")
-    gv = _google_volumes(title, author, 4)
-    gb = max(gv, key=lambda v: _ratio(brain.norm_title(title), brain.norm_title(v.get("title", "")))) if gv else {}
+    title, author = short_title(book["title"]), book.get("author", "")
+    nt = brain.norm_title(title)
+    gv = [v for v in _google_volumes(title, author, 8) if _edition_ok(v) and _ratio(nt, brain.norm_title(v.get("title", ""))) >= 0.88]
+    gb = max(gv, key=lambda v: (bool(v.get("imageLinks")), bool(v.get("description")), -len(v.get("title", "")))) if gv else {}
     ol = (_openlibrary_docs(title, author, 3) or [{}])[0]
-    title = gb.get("title") or ol.get("title") or title
-    author = (gb.get("authors") or ol.get("author_name") or [author])[0]
+    author = author or (gb.get("authors") or ol.get("author_name") or [""])[0]
     desc = _clean(gb.get("description", ""))
     if len(desc) < 150 and ol.get("key"):
         r = _get(f"https://openlibrary.org{ol['key']}.json")
@@ -438,3 +471,4 @@ def research(book, workdir):
     print(f"[research] {title} / {author}: wiki={'yes' if bp else 'no'} web_pages={len(texts)} "
           f"concepts={[c['term'] for c in concepts]} category={d['category']}")
     return d
+     
