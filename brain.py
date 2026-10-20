@@ -64,7 +64,11 @@ class Brain:
         if not k:
             return False
         b = self.books[k]
-        return not (b["status"] == "failed" and b.get("attempts", 0) < 2)
+        if b["status"] == "failed" and b.get("attempts", 0) < 2:
+            return False
+        if b["status"] == "skipped" and time.time() > b.get("retry_at", 0):
+            return False
+        return True
 
     def seen_rss(self, rid):
         return rid in self.data["rss_seen"]
@@ -109,6 +113,7 @@ class Brain:
         b = self.books[k]
         if b["status"] != "done":
             b["status"] = "skipped"
+            b["retry_at"] = time.time() + 14 * 86400   # sources may improve later; try again in 2 weeks
         b["skip_reason"] = reason
 
     # ---- planning
