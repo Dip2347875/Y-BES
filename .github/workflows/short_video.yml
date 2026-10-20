@@ -38,7 +38,16 @@ jobs:
         run: |
           git config user.name "book-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add state/brain.json
-          git commit -m "brain" || exit 0
-          git pull --rebase
-          git push
+          [ -f state/brain.json ] || exit 0
+          cp state/brain.json /tmp/mine.json
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python merge_brain.py /tmp/mine.json state/brain.json
+            cp state/brain.json /tmp/mine.json
+            git add state/brain.json
+            git commit -m "brain" || exit 0
+            git push && exit 0
+            sleep 4
+          done
+          exit 1
