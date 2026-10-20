@@ -1,4 +1,5 @@
-"""Central settings. Everything secret comes from environment variables / GitHub Secrets."""
+"""Central settings. Secrets come from environment variables / GitHub Secrets. No AI API key is needed:
+the AI model runs locally on the machine (free, open-source)."""
 import os
 from pathlib import Path
 
@@ -30,10 +31,26 @@ RATE, PITCH = env("TTS_RATE", "-4%"), env("TTS_PITCH", "-2Hz")
 
 # ---- video formats -------------------------------------------------------
 LONG = dict(W=1920, H=1080, fps=24, chunk_words=34, max_words=48)
-MIN_WORDS_LONG = int(env("MIN_WORDS_LONG", "1200"))     # skip books that do not have enough free material
 SHORT = dict(W=1080, H=1920, fps=30, target_seconds=55, chunk_words=12, max_words=18)
 RENDER_WORKERS = int(env("RENDER_WORKERS", "2"))
 FFMPEG_THREADS = env("FFMPEG_THREADS", "2")
+
+# ---- long video length: narration runs ~143 words per minute -------------
+LONG_MIN_WORDS = int(env("LONG_MIN_WORDS", "15200"))        # about 1h46m
+LONG_TARGET_WORDS = int(env("LONG_TARGET_WORDS", "16200"))  # about 1h53m
+LONG_MAX_WORDS = int(env("LONG_MAX_WORDS", "17000"))        # about 1h59m
+MIN_WORDS_LONG = int(env("MIN_WORDS_LONG", "1200"))         # only for the no-AI template fallback
+
+# ---- local AI (llama.cpp, free, runs on the CPU of the runner) -----------
+AI_BUDGET_MIN = int(env("AI_BUDGET_MIN", "230"))            # minutes the AI stage may use
+AI_CTX = int(env("AI_CTX", "8192"))
+MAX_NOTE_CHUNKS = int(env("MAX_NOTE_CHUNKS", "40"))
+MIN_SOURCE_WORDS = int(env("MIN_SOURCE_WORDS", "6000"))     # not enough research material -> pick another book
+_custom = env("LOCAL_MODEL")                                # optional "repo::file.gguf"
+AI_MODELS = ([tuple(_custom.split("::", 1))] if "::" in _custom else []) + [
+    ("bartowski/Phi-3.5-mini-instruct-GGUF", "Phi-3.5-mini-instruct-Q4_K_M.gguf"),
+    ("microsoft/Phi-3-mini-4k-instruct-gguf", "Phi-3-mini-4k-instruct-q4.gguf"),
+]
 
 # ---- schedule (local hour of your audience / yourself) -------------------
 SLOT_TZ_OFFSET = float(env("SLOT_TZ_OFFSET", "6"))      # 6 = Bangladesh (UTC+6)
