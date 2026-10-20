@@ -10,35 +10,9 @@ import config, brain
 UA = {"User-Agent": "Mozilla/5.0 (compatible; BookExplainerBot/2.1)"}
 WIKI = "https://en.wikipedia.org/w/api.php"
 
-FALLBACK = [
-    ("Thinking in Bets", "Annie Duke"), ("Atomic Habits", "James Clear"), ("Deep Work", "Cal Newport"),
-    ("Thinking, Fast and Slow", "Daniel Kahneman"), ("The Psychology of Money", "Morgan Housel"),
-    ("Man's Search for Meaning", "Viktor Frankl"), ("Essentialism", "Greg McKeown"), ("Range", "David Epstein"),
-    ("Outliers", "Malcolm Gladwell"), ("Influence", "Robert Cialdini"), ("Mindset", "Carol Dweck"),
-    ("The 48 Laws of Power", "Robert Greene"), ("Meditations", "Marcus Aurelius"),
-    ("Antifragile", "Nassim Nicholas Taleb"), ("Zero to One", "Peter Thiel"), ("Grit", "Angela Duckworth"),
-    ("The Subtle Art of Not Giving a F*ck", "Mark Manson"), ("Sapiens", "Yuval Noah Harari"),
-    ("Can't Hurt Me", "David Goggins"), ("The Power of Now", "Eckhart Tolle"),
-    ("Rich Dad Poor Dad", "Robert Kiyosaki"), ("Think and Grow Rich", "Napoleon Hill"),
-    ("How to Win Friends and Influence People", "Dale Carnegie"), ("Never Split the Difference", "Chris Voss"),
-    ("The Lean Startup", "Eric Ries"), ("Hooked", "Nir Eyal"), ("Drive", "Daniel H. Pink"),
-    ("The Black Swan", "Nassim Nicholas Taleb"), ("Principles", "Ray Dalio"), ("Ikigai", "Hector Garcia"),
-    ("The Four Agreements", "Don Miguel Ruiz"), ("Quiet", "Susan Cain"), ("The Art of War", "Sun Tzu"),
-    ("Ego Is the Enemy", "Ryan Holiday"), ("The Compound Effect", "Darren Hardy"),
-    ("Make Your Bed", "William H. McRaven"), ("Smarter Faster Better", "Charles Duhigg"),
-    ("The Power of Habit", "Charles Duhigg"), ("Flow", "Mihaly Csikszentmihalyi"),
-    ("The Gifts of Imperfection", "Brene Brown"), ("Emotional Intelligence", "Daniel Goleman"),
-    ("The 7 Habits of Highly Effective People", "Stephen R. Covey"), ("Start with Why", "Simon Sinek"),
-    ("The Five Dysfunctions of a Team", "Patrick Lencioni"), ("Good to Great", "Jim Collins"),
-    ("The Intelligent Investor", "Benjamin Graham"), ("The Richest Man in Babylon", "George S. Clason"),
-    ("Freakonomics", "Steven D. Levitt"), ("Guns, Germs, and Steel", "Jared Diamond"),
-    ("The Gift of Fear", "Gavin de Becker"), ("Predictably Irrational", "Dan Ariely"),
-    ("Nudge", "Richard H. Thaler"), ("Blink", "Malcolm Gladwell"), ("The Tipping Point", "Malcolm Gladwell"),
-    ("Why We Sleep", "Matthew Walker"), ("The Obstacle Is the Way", "Ryan Holiday"),
-    ("Letters from a Stoic", "Seneca"), ("The Alchemist", "Paulo Coelho"), ("1984", "George Orwell"),
-    ("Animal Farm", "George Orwell"), ("Brave New World", "Aldous Huxley"), ("The Prince", "Niccolo Machiavelli"),
-    ("Walden", "Henry David Thoreau"), ("Crime and Punishment", "Fyodor Dostoevsky"),
-]
+SUBJECTS = ["self-help", "personal development", "psychology", "business", "entrepreneurship", "economics", "philosophy",
+            "history", "science", "biography", "leadership", "productivity", "health", "communication", "finance",
+            "investing", "creativity", "neuroscience", "sociology", "education", "mindfulness", "negotiation"]
 
 # third-party summaries / workbooks / special editions are NOT the original book
 EDITION_BAD = re.compile(r"\b(summary|summaries|workbook|study guide|sparknotes|cliffsnotes|companion|graphic novel|"
@@ -137,8 +111,34 @@ def entry_candidates(title, summary):
     return res
 
 
+def openlibrary_discover():
+    """Books that are trending right now on Open Library (no names stored in this program)."""
+    for period in ("weekly", "monthly", "yearly"):
+        r = _get(f"https://openlibrary.org/trending/{period}.json", params={"limit": 60})
+        for w in (r.json().get("works", []) if r else []):
+            if w.get("title") and w.get("author_name"):
+                yield w["title"], w["author_name"][0]
+
+
+def google_discover():
+    """Popular books found through Google Books subject searches, in random order."""
+    subjects = SUBJECTS[:]
+    random.shuffle(subjects)
+    for sub in subjects:
+        r = _get("https://www.googleapis.com/books/v1/volumes",
+                 params={"q": f"subject:{sub}", "orderBy": "relevance", "maxResults": 20, "printType": "books",
+                         "langRestrict": "en", "startIndex": random.choice([0, 10, 20, 30])})
+        for it in (r.json().get("items", []) if r else []):
+            v = it.get("volumeInfo", {})
+            if v.get("authors") and _edition_ok(v) and (v.get("ratingsCount", 0) >= 20 or v.get("averageRating", 0) >= 4) \
+                    and (v.get("pageCount") or 0) >= 120 and len(v.get("description", "")) >= 200:
+                yield short_title(v.get("title", "")), v["authors"][0]
+        time.sleep(0.5)
+
+
 def next_books(br, mode, forced=None):
-    """Generator of books to work on. Verified real books only; anything in the brain is skipped."""
+    """Generator of books to work on. Sources: brain backlog, RSS, Open Library trending, Google Books.
+    Every candidate is verified to be a real book, and anything already in the brain is skipped."""
     if forced:
         t, _, a = forced.partition("|")
         yield dict(title=t.strip(), author=a.strip())
@@ -149,7 +149,16 @@ def next_books(br, mode, forced=None):
     else:
         for b in br.books_needing_long():
             yield dict(title=b["title"], author=b["author"])
-    checked = 0
+    checked = [0]
+
+    def vet(t, a):
+        if br.is_blocked(t, a) or checked[0] >= 60:
+            return None
+        checked[0] += 1
+        v = verify_book(t, a)
+        time.sleep(0.5)
+        return v if v and not br.is_blocked(v["title"], v["author"]) else None
+
     for url in config.RSS_FEEDS:
         try:
             feed = feedparser.parse(url, agent=UA["User-Agent"])
@@ -162,20 +171,17 @@ def next_books(br, mode, forced=None):
                 continue
             br.add_rss(rid)
             for t, a in entry_candidates(_clean(e.get("title")), _clean(e.get("summary"))):
-                if br.is_blocked(t, a) or checked >= 40:
-                    continue
-                checked += 1
-                v = verify_book(t, a)
-                time.sleep(0.5)
-                if v and not br.is_blocked(v["title"], v["author"]):
+                v = vet(t, a)
+                if v:
                     print(f"[rss] real book found: {v['title']} - {v['author']}")
                     yield v
                     break
-    pool = list(FALLBACK)
-    random.shuffle(pool)
-    for t, a in pool:
-        if not br.is_blocked(t, a):
-            yield dict(title=t, author=a)
+    for source in (openlibrary_discover, google_discover):
+        for t, a in source():
+            v = vet(t, a)
+            if v:
+                print(f"[discover] {source.__name__}: {v['title']} - {v['author']}")
+                yield v
 
 
 # ------------------------------------------------------------------ Wikipedia helpers
@@ -313,7 +319,7 @@ def mine_concepts(book_page, texts, exclude, limit=12):
     return res
 
 
-# ------------------------------------------------------------------ web pages (only used for concept mining)
+# ------------------------------------------------------------------ web pages (research input only)
 def _search_urls(queries):
     urls = []
     try:
@@ -350,7 +356,7 @@ def _search_urls(queries):
     return out
 
 
-def _web_texts(title, author, max_pages=12):
+def _web_texts(title, author, max_pages=14):
     import trafilatura
     urls = _search_urls([f'"{title}" {author} book summary key ideas', f"{title} {author} chapter by chapter summary",
                          f"{title} {author} lessons takeaways", f"{title} {author} review"])
@@ -430,7 +436,8 @@ def map_category(hay):
 
 
 # ------------------------------------------------------------------ main research
-def research(book, workdir):
+def research_light(book, workdir):
+    """Metadata + cover only (fast). Used for Shorts when the deep research is already stored in the brain."""
     title, author = short_title(book["title"]), book.get("author", "")
     nt = brain.norm_title(title)
     gv = [v for v in _google_volumes(title, author, 8) if _edition_ok(v) and _ratio(nt, brain.norm_title(v.get("title", ""))) >= 0.88]
@@ -451,20 +458,27 @@ def research(book, workdir):
     if ol.get("cover_i"):
         cover_urls.append(f"https://covers.openlibrary.org/b/id/{ol['cover_i']}-L.jpg")
     cover = _download_cover(cover_urls, workdir / "cover.jpg") or _fallback_cover(title, author, workdir / "cover.jpg")
-
-    bp = _find_book_page(title, author)
-    book_wiki = _wiki_full(bp) if bp else {"intro": "", "sections": {}}
-    ap = _find_author_page(author)
-    author_wiki = _wiki_full(ap) if ap else {"intro": "", "sections": {}}
-    texts = _web_texts(title, author)
-    pool = texts + [book_wiki["intro"] + " " + " ".join(book_wiki["sections"].values()), desc]
-    exclude = [w for w in re.findall(r"[a-z]{4,}", f"{title} {author}".lower())] + ["book", "author", "chapter"]
-    concepts = mine_concepts(bp, pool, exclude)
     categories = list(gb.get("categories") or []) + list(ol.get("subject", [])[:8])
-    d = dict(title=title, subtitle=gb.get("subtitle", ""), author=author, description=desc, pages=gb.get("pageCount"),
-             published=gb.get("publishedDate", ""), cover=str(cover), book_wiki=book_wiki, author_wiki=author_wiki,
-             concepts=concepts, categories=categories, web_pages=len(texts),
-             category=map_category(" ".join(categories) + " " + desc + " " + " ".join(c["term"] for c in concepts)))
+    return dict(title=title, subtitle=gb.get("subtitle", ""), author=author, description=desc, pages=gb.get("pageCount"),
+                published=gb.get("publishedDate", ""), cover=str(cover), categories=categories,
+                book_wiki={"intro": "", "sections": {}}, author_wiki={"intro": "", "sections": {}}, concepts=[], web_pages=0,
+                category=map_category(" ".join(categories) + " " + desc))
+
+
+def research(book, workdir):
+    d = research_light(book, workdir)
+    title, author = d["title"], d["author"]
+    bp = _find_book_page(title, author)
+    d["book_wiki"] = _wiki_full(bp) if bp else {"intro": "", "sections": {}}
+    ap = _find_author_page(author)
+    d["author_wiki"] = _wiki_full(ap) if ap else {"intro": "", "sections": {}}
+    texts = _web_texts(title, author)
+    pool = texts + [d["book_wiki"]["intro"] + " " + " ".join(d["book_wiki"]["sections"].values()), d["description"]]
+    exclude = [w for w in re.findall(r"[a-z]{4,}", f"{title} {author}".lower())] + ["book", "author", "chapter"]
+    d["concepts"] = mine_concepts(bp, pool, exclude)
+    d["web_pages"] = len(texts)
+    d["web_texts"] = texts
+    d["category"] = map_category(" ".join(d["categories"]) + " " + d["description"] + " " + " ".join(c["term"] for c in d["concepts"]))
     print(f"[research] {title} / {author}: wiki={'yes' if bp else 'no'} web_pages={len(texts)} "
-          f"concepts={[c['term'] for c in concepts]} category={d['category']}")
+          f"concepts={[c['term'] for c in d['concepts']]} category={d['category']}")
     return d
