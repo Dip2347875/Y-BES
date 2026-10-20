@@ -1,3 +1,4 @@
+"""YouTube upload (resumable), scheduled publishing, custom thumbnail, category playlists."""
 import datetime as dt, time
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -6,12 +7,12 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import config
 
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtube"]
-
 
 def service():
+    # IMPORTANT: no `scopes=` here. A refresh token can only be used with the scopes it was created with;
+    # asking for other scopes gives "invalid_scope". Without it Google uses the token's own scopes.
     c = Credentials(None, refresh_token=config.env("YT_REFRESH_TOKEN"), token_uri="https://oauth2.googleapis.com/token",
-                    client_id=config.env("YT_CLIENT_ID"), client_secret=config.env("YT_CLIENT_SECRET"), scopes=SCOPES)
+                    client_id=config.env("YT_CLIENT_ID"), client_secret=config.env("YT_CLIENT_SECRET"))
     c.refresh(Request())
     return build("youtube", "v3", credentials=c, cache_discovery=False)
 
@@ -75,13 +76,17 @@ def upload(video, meta, thumb, playlist_title, playlist_desc, st, mode, publish_
             else:
                 raise
     vid = resp["id"]
+    log("[upload] video uploaded:", vid)
     if thumb:
         try:
             yt.thumbnails().set(videoId=vid, media_body=MediaFileUpload(str(thumb))).execute()
-        except HttpError as e:
-            log("[upload] thumbnail failed (channel needs phone verification):", e)
-    pl = ensure_playlist(yt, playlist_title, playlist_desc, st)
-    yt.playlistItems().insert(part="snippet", body={"snippet": {
-        "playlistId": pl, "resourceId": {"kind": "youtube#video", "videoId": vid}}}).execute()
-    log("[upload] done:", vid)
+        except Exception as e:
+            log("[upload] thumbnail not set:", str(e)[:200])
+    try:  # the video is already live; a playlist problem must never fail the whole run
+        pl = ensure_playlist(yt, playlist_title, playlist_desc, st)
+        yt.playlistItems().insert(part="snippet", body={"snippet": {
+            "playlistId": pl, "resourceId": {"kind": "youtube#video", "videoId": vid}}}).execute()
+        log("[upload] added to playlist:", playlist_title)
+    except Exception as e:
+        log("[upload] playlist step skipped (token may lack the 'youtube' scope):", str(e)[:200])
     return vid
