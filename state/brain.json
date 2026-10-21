@@ -25,7 +25,13 @@
         "Rewards and Reinforcement Loops",
         "Self-Control Beyond Willpower"
       ],
-      "shorts": [],
+      "shorts": [
+        {
+          "idea": "Systems Over Goals",
+          "video_id": "JZ1S9YGp75A",
+          "at": 1792598442.3144314
+        }
+      ],
       "long": {
         "done": true,
         "video_id": "0nUVlozbFCY",
