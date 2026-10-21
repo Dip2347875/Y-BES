@@ -1,47 +1,101 @@
 {
   "version": 2,
   "books": {
-    "can-t-hurt-me-goggins": {
-      "title": "Can't Hurt Me",
-      "author": "David Goggins",
-      "norm": "can t hurt me",
-      "surname": "goggins",
+    "atomic-habits-clear": {
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "norm": "atomic habits",
+      "surname": "clear",
       "status": "done",
       "attempts": 0,
       "concepts": [
-        "Mental toughness",
-        "World record"
+        "Systems Over Goals",
+        "Identity and Habit Formation",
+        "The Four Laws of Behavior Change",
+        "Making Good Habits Obvious",
+        "Reducing Self-Control Efforts",
+        "Social Influence and Community Support",
+        "Habit Stacking Technique",
+        "Temptation Bundling Explained",
+        "The Two-Minute Rule",
+        "Pointing and Calling Technique",
+        "Implementation Intentions for New Habits",
+        "Environmental Cues in Triggering Behaviors",
+        "Design Environments to Minimize Distractions",
+        "Rewards and Reinforcement Loops",
+        "Self-Control Beyond Willpower"
       ],
-      "shorts": [
-        {
-          "idea": "Mental toughness",
-          "video_id": "IQm-a5W8OVQ",
-          "at": 1792541805.7625997
-        },
-        {
-          "idea": "World record",
-          "video_id": "zCHvM9CU1QA",
-          "at": 1792547560.098662
-        }
-      ],
+      "shorts": [],
       "long": {
         "done": true,
-        "video_id": "KGb-q9--BGo",
-        "at": 1792519308.602037
+        "video_id": "0nUVlozbFCY",
+        "at": 1792560015.675657
       },
-      "first_seen": 1792518878.278449,
-      "claimed_at": 1792518878.2784507,
-      "category": "Biography & Memoir",
+      "first_seen": 1792549313.2923772,
+      "claimed_at": 1792549313.2923815,
       "ideas": [
         {
-          "term": "Mental toughness",
-          "text": "Mental toughness is a psychological trait involving confidence, emotional and behavioral control, commitment to goals, persistence under stress, and an intermediate belief to interpret challenges as opportunities for growth, enabling individuals not only to endure adversity but also to function effectively and pursue excellence. It is a measure of an individual’s psychological resilience and confidence under pressure, adversity, uncertainty, and challenge. Mental toughness shares key characteristics with grit and may predict success in sport, education, and professional settings.  Near-synonyms of mental toughness include hardiness, determination, strong-willed, and stalwart.\nThe concept emerged in the context of sports training and sports psychology as one of a set of attributes that allows a person to become a better athlete, cope with difficult training and competitive situations, and emerge without losing confidence. The term has been used by coaches, sport psychologists, sports commentators, and business leaders."
+          "term": "Systems Over Goals",
+          "text": "Imagine you're embarking on a journey through an intricate maze, where each turn represents choices that shape your life. In 'Atomic Habits,' James Clear guides us to understand how we can navigate this labyrinth with small but powerful steps rather than aim for the grand prize at its center - which often remains elusive due to our human propensity toward procrastination and overwhelm. The book introduces a refreshing perspective: it's not about reaching distant goals; instead, we should focus on constructing reliable systems that ensure steady progress day by day. Consider this scenario - you strive for fitness with the aim of running your first marathon in six months. Instead of fretting over how far away and challenging it seems to be at any moment, think about establishing a daily routine: going on brisk walks every evening after dinner or swimming twice during weekends - simple actions that accumulate into miles under the open sky. These aren't grandiose feats but tiny ripples in water leading steadily toward your marathon ambition. Clear argues for embracing incremental changes; imagine a seed growing within you, one day at a time until it blossoms fully as an oak tree or stands proudly against the winds of life's challenges and uncertainties. Each morning when your alarm goes off, that’s not just another start to yet another ordinary day but rather an opportunity for growth through"
         },
         {
-          "term": "World record",
-          "text": "A world record is usually the best global and most important performance that is ever recorded and officially verified in a specific skill, sport, or other kind of activity. The book Guinness World Records and other world records organizations collates and publishes notable records of many.\n\n"
+          "term": "Identity and Habit Formation",
+          "text": "Imagine your life as a vast, intricate tapestry where every thread represents the myriad of habits you weave into existence each day. These threads are colored by choices both grand and minute; they intertwine to craft an identity that is uniquely yours yet influenced heavily by societal norms or past experiences whispering their own expectations in your ear. In 'Atomic Habits,' James Clear guides us through the labyrinth of our daily routines, urging you not just to observe but actively sculpt these threads into a masterpiece that mirrors who we aspire to be. It's as if each habit is like an echo in your mind—some resonate with harmony and others clash discordantly against the melody of self-image goals, prompting us either subtly or loudly towards change. As you stand before a blank canvas within yourself, consider that aligning these habits isn't merely about willpower; it’s an act as natural to your being as breath is for life itself. To paint with the colors of consistency and intention requires understanding how each stroke contributes not only to personal growth but also shapes who you perceive in a mirror or within yourself during quiet reflection—your identity aspiration, if we may call it that way poetically. Now let's wade into this sea together: habits are like the brushes of an artist; they can either create masterpieces reflecting your deepest desires and dreams or"
+        },
+        {
+          "term": "The Four Laws of Behavior Change",
+          "text": "Imagine your life as a tapestry, woven from threads of daily actions and decisions. Each thread represents the moments that shape who you are—some vibrant with intention, others faded by routine or neglect. James Clear's 'Atomic Habits,' like an experienced weaver, guides us in understanding how to rearrange these strands so they create a pattern of well-being and success. Consider the Four Laws that form this intricate design: make desired behaviors obvious; craft them attractive—like bees drawn irresistibly toward blooming flowers because their colors promise nectar, not just any sweetness will do for us humans either. Make habits easy to grasp as if they're leaves drifting gently down a stream you naturally walk beside without effort or thought; and finally, ensure rewards are satisfying—think of how the warm embrace after weathering life’s storm nourishes your spirit profoundly more than any fleeting comfort. Now picture this framework as an elaborate dance floor where every step is a beat in rhythm with our innate desire for simplicity and pleasure, leading us gracefully to form habits that become extensions of ourselves rather than burdens we bear alone. You don't just want these steps memorized; you wish them alive within your muscle memory because at its core lies the most delicate dance between what is known by our cues—those signals in life, like an email notification or a morning sunbeam urging action—and those deep-seated"
+        },
+        {
+          "term": "Making Good Habits Obvious",
+          "text": "Imagine you're standing at the threshold of your life, about to step into a vast orchard where each tree represents an opportunity for habit cultivation. You understand that tending this garden requires not just seeds and water but also keen observation—a map leading back home when paths become obscured by overgrowth or shadows creep upon the landscapes of your daily routine. Here, in 'Atomic Habits,' James Clear unfolds a treasure trove for those eager to cultivate fertile ground within themselves and witness their growth into lush groves that offer sustenance not just for personal fulfillment but also oxygen-rich contributions towards the world around you. Now picture yourself holding this map, 'The Habit Scorecard,' in your hands—a compass pointing to hidden treasures of self-improvement and behavioral transformation within reach through keen awareness brought into sharp relief by its luminous lines guiding back homeward when life's tumultuous winds blow you off course. Each day, as the sun rises anew on your horizon, so does it illuminate a canvas upon which to paint with deliberate strokes of habitual actions; some vibrant and flourishing while others languish in neglected corners yearning for attention's touch or perhaps even removal. The artistry lies not just within the grand gestures but also resides deeply rooted beneath these daily brushstrokes—each choice, each step taken on your path to self-mastery is a note played by an unseen maestro of"
+        },
+        {
+          "term": "Reducing Self-Control Efforts",
+          "text": "Imagine yourself stepping into a world where your everyday environment subtly nudges you towards healthier, more productive habits. You're not just another face in the crowd; instead, this setting whispers encouragements that echo with each of life’s intricate melodies and harmonizes them to compose an opus unique only for your being—an environment carefully crafted by you or perhaps someone who has walked a mile on those same paths. It's as if the very air around is imbued with intentionality, encouraging each breath taken towards betterment without demanding constant vigilance over one’s willpower reserves. Here in this reality where choices are visibly laid out like breadcrumb trails leading homeward to your aspirations—this isn't a mere fantasy but the core principle of 'Atomic Habits.' Think about how effortlessly you could slip into routines that once seemed Herculean. It starts with peering at our surroundings, not as barriers or obstacles to overcome, but rather like well-intentioned companions guiding us along a path of self-improvement and efficiency—designs so cleverly devised they almost become invisible forces shaping your behaviors without you even realizing it. Picture this: You're in the kitchen with an array of colorful, pre-boxed meals waiting patiently on the countertop; each package is a testament to foresight—a commitment device clever enough that once opened and placed into your refrigerator’s embrace at dinner time becomes less about resisting temptation than embracing nourishment. Your fridge,"
+        },
+        {
+          "term": "Social Influence and Community Support",
+          "text": "Imagine yourself walking through a bustling marketplace, not just any ordinary place but one that pulses with the collective heartbeat of shared aspirations. Here in this tapestry woven from countless threads of individual dreams and efforts lies an intricate dance between social influence and community support—a ballet where each step is a habit being shaped, refined by invisible hands that guide you subtly yet persistently towards betterment. You've seen how easily people are swayed; your mood lifts when the crowd cheers or falls into introspection under their gaze of disapproval—this isn’t just an observation but a profound insight from James Clear in 'Atomic Habits.' He tells us that our behaviors aren't solitary endeavors, they are performed on this grand stage set by society. Now picture yourself joining hands with others who share your vision of healthier living—a community where the air is thick not just with ambition but also accountability and encouragement for one another to nourish their bodies like gardens in full bloom, each petal a testament to collective effort. It's as if you’ve found an orchard ripe for harvesting good habits; the very act of aligning your daily routines with this group amplifies and reinforces them through something called social proof—an echo chamber where success is not just celebrated but reverberated, urging us to follow suit. Within these communities lie hidden treasures like weekly compliments that are more"
+        },
+        {
+          "term": "Habit Stacking Technique",
+          "text": "Imagine you're a gardener, and your existing habits are the sturdy trellises upon which new vines of behavior can climb. You already water these plants daily; now picture planting seeds—new routines that need nurturing to sprout into life-sustaining greenery around you. This is habit stacking, a strategy where fresh habits are grafted onto the robust branches of your current patterns like ivy intertwining with an old oak tree for strength and stability in growth. You're not just throwing seeds randomly into soil; no, this requires intention—a blueprint etched out beforehand that details exactly when to plant them alongside those you already care for diligently each day. It’s akin to mapping your garden with precision: where and how the new flowers will flourish in harmony with their neighbors without disrupting what's already blooming so brilliantly around it. By anchoring these sproutlings of habit within familiar daily rituals, you create an irrevocable chain linking each action to its successor—a meticulously choreographed dance where every step is purposeful and the next move unfolds with ease because your body has memorized this intricate sequence. This isn't a mere mental note; it’s as if muscle memory itself whispers, \"Now for our new habit.\" Think about Warren Buffett—the investor whose decades of patience have paid off in financial riches beyond measure because he didn't chase quick profits but nurtured them slowly. He understands that like a"
+        },
+        {
+          "term": "Temptation Bundling Explained",
+          "text": "Imagine yourself standing at the edge of a vast, untouched forest. Each step forward is an opportunity to create new paths or follow worn ones; it's where your journey intersects with others—a shared pilgrimage woven from countless footsteps that echo through time and space within this living mosaic we call life. Now let me draw you back into the world of 'Atomic Habits,' a book as transformative for our daily routines as those woods are serene, yet vibrant with potential change. Here in these habitual thickets lie insights that can guide us toward creating harmonious patterns within ourselves and alongside others—a symphony not just composed by you but shared across the fabric of humanity's existence. You’ve perhaps heard about temptation bundling, a concept as ingeniously simple yet profoundly effective in reshaping our daily lives that James Clear elucidates with captivating clarity—it intertwines necessary tasks and pleasures to craft an irresistible pairing of actions. Picture this: you're lounging on your couch, a beloved movie playing while simultaneously doing the dishes; herein lies temptation bundling in action. The ordinary task becomes appealing because it accompanies joy—your mind revels at that dual delight and clings to both experiences like cherished memories etched into its core. Dopamine, our brain's messenger of reward anticipation, plays a pivotal role here; it’s the invisible conductor orchestrating this dance between desire and necessity until they blend seamlessly together"
+        },
+        {
+          "term": "The Two-Minute Rule",
+          "text": "Imagine stepping into a world where the smallest actions compose an intricate symphony, each note contributing to life's grand composition. This isn't just another tale; it’s about transforming your reality through habitual melodies that echo with persistence and dedication—a narrative inspired by James Clear in 'Atomic Habits.' You understand the power of these minute movements, how they weave into a tapestry so richly detailed yet often overlooked. The Two-Minute Rule stands as your conductor's baton here; it guides you to initiate modest but mighty endeavors that gradually crescendo from simplicity towards complexity and mastery. Let’s paint this picture together: You wake up, not with a daunting list of tasks awaiting execution, but rather the gentle encouragement for just two minutes' worth of activity—a simple act like reading one page or slipping into your running gear before you even step foot outdoors. It sounds trivial at first glance; after all, why start small when ambitions loom large? But hear this – it’s within these tiny ripples that the potential for life-altering waves lies hidden in wait. Think of yourself as an artist with a blank canvas each morning or evening—the two minutes are your palette's first strokes, laying down hues and textures barely perceivable yet essential to envisioned masterpieces over time. These small acts aren’t mere checkboxes on life’s list; they become the brushstrokes of a daily ritual that gradually transform"
+        },
+        {
+          "term": "Pointing and Calling Technique",
+          "text": "Imagine stepping into a world where the minutiae of daily life are not just mundane, but sculptors shaping who you become. You've likely heard that small changes can lead to significant transformations; well, 'Atomic Habits,' authored by James Clear, takes this concept and magnifies it through an intricate lens focusing on the subtle yet powerful forces of habit formation—a world where your everyday actions weave together a complex tapestry defining not just personal growth but also collective evolution. Let's dive deeper into one such transformative tool, pointing and calling, which might sound like something out of an old-fashioned factory floor yet holds immense potential in modern life: envision you entering your kitchen each morning with a fresh commitment to replace sugary cereal snacks with fruit. As the routine sets its familiar pace, this simple act begins as just another item on your grocery list until one day it becomes an anchor for change—your new habit anchored by consistent repetition and mindfulness of choice at each step. This technique is akin to shining a spotlight in a dim room; suddenly the path you're taking illuminates, revealing patterns previously unnoticed like brushstrokes on an abstract painting gradually coming into focus with every glance. By calling attention to your actions and pointing out them consciously—like jotting down these healthy breakfast swaps in a habit journal or sharing this commitment aloud each morning during"
+        },
+        {
+          "term": "Implementation Intentions for New Habits",
+          "text": "As you stand on the cusp of transforming your life, imagine yourself as a composer orchestrating an opulent symphony. Each note represents one habitual action; together they compose the grand melody that is 'you'. Now picture this: each new song requires not just passion but precision in its performance—enter implementation intentions for crafting these habits into your daily life, like a maestro guiding musicians through complex harmonies. You've likely heard of plans and resolutions before; they are the overtures to this grand concert hall you inhabit called self-improvement. Yet even with such aspirations laid bare on paper, without tactile cues in your environment or mental triggers set into motion like clockwork chimes at noon, these intentions linger as mere wisps of fog against the mountain peak that is change—a summit you yearn to conquer and claim. Here's where James Clear steps onto center stage with his magnum opus 'Atomic Habits', a guidebook not merely for action but an instruction manual on how habitual movements can be choreographed into the dance of daily life, each step purposefully placed within your existing routines like perfectly fitted pieces in intricate ballet. By planting specific seeds—\"I will run two miles at dawn by my favorite park bench,\" for instance—you're not just cultivating a habit; you’re engineering an ecosystem where every morning, as the sun peeks over your horizon and paints it with gold, this"
+        },
+        {
+          "term": "Environmental Cues in Triggering Behaviors",
+          "text": "Imagine you're wandering through a dense, ancient forest. The air is thick with mystery and the underbrush whispers secrets of old habits long embedded in its roots. Herein lies our journey into 'Atomic Habits,' where James Clear invites us to tread softly on this same ground but look closer at what shapes those very trees—the environmental cues that stand as silent sentinels guiding your every step, often unbeknownst and underestimated. Picture yourself returning home after a day's work; there it is: the coffee mug by the bedside table with just enough warmth left in its embrace to coax you awake each morning without even battling willpower—a simple, unassuming beacon of routine. This isn’t magic but an orchestrated symphony played out on a stage we often overlook: our surroundings meticulously arranged by invisible hands. It's easy for us to assume that the essence of change lies within fiery bursts of motivation, like wildfires consuming dry tinder—spontaneous and powerful yet fleeting without fuel in their belly. But what if I told you this forest thrives not on such fires but rather nourished by an intricate network of roots? Let's delve deeper into the soil, where a groundbreaking experiment conducted by Olds and Milner with rats reveals that stripping away dopamine—a neurotransmitter we often associate solely with pleasure or addiction—left those creatures bereft of motivation for their very survival. This discovery is not"
+        },
+        {
+          "term": "Design Environments to Minimize Distractions",
+          "text": "Imagine stepping into a room meticulously arranged to nudge you towards your goals. Every item, every note on the wall is crafted not just for decoration but as an unspoken guide leading toward better habits and improved self-control—this isn't some distant utopian vision; it’s practical advice from 'Atomic Habits.' James Clear delves into how our surroundings subtly shape us, much like a river carves its path through the landscape over centuries. It all boils down to designing environments that support your aspirations rather than hindering them—a concept as simple and profound in execution as it is impactful when applied consistently. Picture this: you're about to start jogging, but instead of slipping into a sedentary lifestyle once again with the evening hours creeping up on your calendar, there’s already an inviting pair of running shoes by your doorstep—a visual cue that nudges out complacency and whispers 'now is the time.' It's like having invisible cheerleaders in every room you enter. Now consider this scenario where accountability partners play a pivotal role, much as friends would remind each other of shared commitments over coffee or family members who gently nudge their loved ones back on track when they stray from the dietary path set out for health reasons—these external forces are not just helpful but essential in creating an ecosystem where habits can thrive. They're your partners, each check-in and shared glance"
+        },
+        {
+          "term": "Rewards and Reinforcement Loops",
+          "text": "You stand on the precipice of a transformative journey, where every ripple in your daily life could beckon waves of change. 'Atomic Habits,' penned by James Clear, serves as both compass and map for this voyage—your own odyssey towards mastery over self-control and habit formation is at hand. Imagine a world within which the small choices we make echo with profound consequences throughout our existence; here lies your chance to craft those ripples into tsunamis of personal growth, all by harnessing immediate rewards that resonate deeply in every fiber of being. You've likely felt it—the undeniable pull towards instant gratification. Our brains are wired for this impulse; dopamine dances through our neural pathways when we anticipate or receive a reward, enticing us with the promise of pleasure as an immediate comfort against life’s often delayed rewards and challenges. Yet herein lies your power: you can manipulate these expectations to align them more closely with long-term aspirations—a masterstroke in creating habits that not only endure but flourish into defining elements of who we are. Consider, if you will, a scenario where after resisting the siren call for yet another impulsive purchase at your local café, instead divert those saved funds directly to an account dedicated solely towards rejuvenation through travel or leisure activities—a vacation fund that grows with each small sacrifice. The pleasure of such immediate satisfaction becomes a beacon guiding"
+        },
+        {
+          "term": "Self-Control Beyond Willpower",
+          "text": "Imagine stepping into a world where the power of self-control isn't just about sheer willpower but is deeply intertwined with how we shape our environments. Picture yourself in your living room, every book and gadget meticulously arranged to not only inspire you daily but also subtly guide each choice towards productivity—this encapsulates the essence of 'Atomic Habits'. The concept isn't about some mystical inner strength; it’s more akin to building an invisible scaffold around your life that supports and nudifies better decisions. It is recognizing our genetic predispositions, understanding where we excel naturally or struggle with discipline, then tailoring the environment for optimal performance based on those insights—like setting up separate zones in your kitchen specifically designed to streamline breakfast preparation if you're a morning workout enthusiast whose punctuality is as precise as clockwork. Now consider this: when we talk about distractions, it’s not always our lack of focus at the core; often times, they are simply around us lurking to derail from what needs doing. Atomic Habits invites you into a conversation with your surroundings—your workplace layout might be silently conspiring against efficiency until rearranged for clarity and purpose like placing trash bins away where not eyes can accidentally wander off, or having every tool within arm's reach to avoid the temptation of leaving them scattered around. In this journey towards mastery over self-discipline, we’re often confronted with psychological"
         }
-      ]
+      ],
+      "category": "Productivity & Habits"
     },
     "range-epstein": {
       "title": "Range",
@@ -144,6 +198,48 @@
         }
       ],
       "category": "Productivity & Habits"
+    },
+    "can-t-hurt-me-goggins": {
+      "title": "Can't Hurt Me",
+      "author": "David Goggins",
+      "norm": "can t hurt me",
+      "surname": "goggins",
+      "status": "done",
+      "attempts": 0,
+      "concepts": [
+        "Mental toughness",
+        "World record"
+      ],
+      "shorts": [
+        {
+          "idea": "Mental toughness",
+          "video_id": "IQm-a5W8OVQ",
+          "at": 1792541805.7625997
+        },
+        {
+          "idea": "World record",
+          "video_id": "zCHvM9CU1QA",
+          "at": 1792547560.098662
+        }
+      ],
+      "long": {
+        "done": true,
+        "video_id": "KGb-q9--BGo",
+        "at": 1792519308.602037
+      },
+      "first_seen": 1792518878.278449,
+      "claimed_at": 1792518878.2784507,
+      "category": "Biography & Memoir",
+      "ideas": [
+        {
+          "term": "Mental toughness",
+          "text": "Mental toughness is a psychological trait involving confidence, emotional and behavioral control, commitment to goals, persistence under stress, and an intermediate belief to interpret challenges as opportunities for growth, enabling individuals not only to endure adversity but also to function effectively and pursue excellence. It is a measure of an individual’s psychological resilience and confidence under pressure, adversity, uncertainty, and challenge. Mental toughness shares key characteristics with grit and may predict success in sport, education, and professional settings.  Near-synonyms of mental toughness include hardiness, determination, strong-willed, and stalwart.\nThe concept emerged in the context of sports training and sports psychology as one of a set of attributes that allows a person to become a better athlete, cope with difficult training and competitive situations, and emerge without losing confidence. The term has been used by coaches, sport psychologists, sports commentators, and business leaders."
+        },
+        {
+          "term": "World record",
+          "text": "A world record is usually the best global and most important performance that is ever recorded and officially verified in a specific skill, sport, or other kind of activity. The book Guinness World Records and other world records organizations collates and publishes notable records of many.\n\n"
+        }
+      ]
     }
   },
   "rss_seen": [],
