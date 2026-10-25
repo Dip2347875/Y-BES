@@ -22,8 +22,6 @@ RSS_FEEDS = [u.strip() for u in env(
     "https://rss.nytimes.com/services/xml/rss/nyt/Books.xml,"
     "https://www.theguardian.com/books/rss,"
     "https://www.goodreads.com/blog/list_rss.xml").split(",") if u.strip()]
-PEXELS_KEY, PIXABAY_KEY = env("PEXELS_API_KEY"), env("PIXABAY_API_KEY")
-PEXELS_BUDGET = int(env("PEXELS_BUDGET", "150"))        # Pexels allows ~200 requests / hour
 
 # ---- voice ---------------------------------------------------------------
 VOICE = env("EDGE_VOICE", "en-US-AndrewNeural")
@@ -42,7 +40,7 @@ LONG_MAX_WORDS = int(env("LONG_MAX_WORDS", "17000"))        # about 1h59m
 MIN_WORDS_LONG = int(env("MIN_WORDS_LONG", "1200"))         # only for the no-AI template fallback
 
 # ---- local AI (llama.cpp, free, runs on the CPU of the runner) -----------
-AI_BUDGET_MIN = int(env("AI_BUDGET_MIN", "230"))            # minutes the AI stage may use
+AI_BUDGET_MIN = int(env("AI_BUDGET_MIN", "200"))            # minutes the text-AI stage may use
 AI_CTX = int(env("AI_CTX", "8192"))
 MAX_NOTE_CHUNKS = int(env("MAX_NOTE_CHUNKS", "40"))
 MIN_SOURCE_WORDS = int(env("MIN_SOURCE_WORDS", "6000"))     # not enough research material -> pick another book
@@ -51,6 +49,16 @@ AI_MODELS = ([tuple(_custom.split("::", 1))] if "::" in _custom else []) + [
     ("bartowski/Phi-3.5-mini-instruct-GGUF", "Phi-3.5-mini-instruct-Q4_K_M.gguf"),
     ("microsoft/Phi-3-mini-4k-instruct-gguf", "Phi-3-mini-4k-instruct-q4.gguf"),
 ]
+
+# ---- local AI image generation (no stock footage, no API) ----------------
+IMAGE_MODEL = env("IMAGE_MODEL", "SimianLuo/LCM_Dreamshaper_v7")   # fast 4-step text-to-image model, runs on CPU
+IMAGE_STEPS = int(env("IMAGE_STEPS", "4"))
+IMAGE_GUIDANCE = float(env("IMAGE_GUIDANCE", "8.0"))
+IMAGE_W, IMAGE_H = int(env("IMAGE_W", "704")), int(env("IMAGE_H", "400"))   # landscape size (swapped for Shorts)
+IMAGE_MAX = int(env("IMAGE_MAX", "90"))                     # new images per video; later scenes re-use them with new motion
+IMAGE_BUDGET_MIN = int(env("IMAGE_BUDGET_MIN", "55"))       # minutes the picture stage may use
+IMAGE_STYLE = env("IMAGE_STYLE", "editorial illustration, soft cinematic lighting, rich harmonious colors, clean composition, "
+                  "minimal background, highly detailed, no text, no letters, no watermark")
 
 # ---- schedule (local hour of your audience / yourself) -------------------
 SLOT_TZ_OFFSET = float(env("SLOT_TZ_OFFSET", "6"))      # 6 = Bangladesh (UTC+6)
